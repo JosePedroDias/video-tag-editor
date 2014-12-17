@@ -1,16 +1,7 @@
-sudo apt-get install libtesseract-dev
+used ffmpeg to find scene transitions with:
 
-npm install node-tesseract
+	ffprobe -show_frames -of compact=p=0 -f lavfi "movie=bestOfWeb7.mp4,select=gt(scene\,.4)" > scenes.txt
 
-ffprobe bestOfWeb7.mp4
+parsed result (`scenes.txt`) into `sceneTimesOriginal.json` via `parseSceneDetection.js`
 
-ffmpeg -i bestOfWeb7.mp4 -y -f image2 -ss 1 shots/%5d.png
-
-ffprobe -show_frames -of compact=p=0 -f lavfi "movie=bestOfWeb7.mp4,select=gt(scene\,.4)" > scenes.txt
-
-
-http://superuser.com/questions/819573/split-up-a-video-using-ffmpeg-through-scene-detection
-
-best_effort_timestamp_time=10.802456|
-
-http://videos.sapo.pt/dYMbm0HbaGD1M72IEH1l
+made a copy (`sceneTimes.json`) and edited result using `index.html` (which uses `displayScenes.js`, `timelineTweaker` and `chroma.min.js`)

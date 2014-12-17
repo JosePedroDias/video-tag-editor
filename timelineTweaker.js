@@ -58,6 +58,7 @@ var timelineTweaker = function(o) {
 	var onClick = function(ev) {
 		var x = ev.clientX - ev.target.getBoundingClientRect().left;
 		var t = lastT - windowSize2 + x * timeDensity;
+		if (t < 0) { return; }
 		var closestIndex = -1;
 		var smallestDT = 10000;
 		var isBefore = false;

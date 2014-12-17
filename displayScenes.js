@@ -36,19 +36,18 @@ ajax({
 		//console.log('sceneTimes', sceneTimes);
 
 		ajax({
-			uri: 'videos.txt',
+			uri: 'videos.json',
 			cb: function(err, res2) {
 				if (err) { return alert(err); }
 
-				var videos = res2.split('\n');
+				var videos = JSON.parse(res2);
+				//console.log('videos', videos);
 
 				var tt = timelineTweaker({
 					arr:    sceneTimes,
 					labels: videos,
 					dims:   [600, 100]
-				});
-
-				//console.log('videos', videos);
+				});				
 
 				var videoEl    = document.querySelector('video');
 				var buttonsEl  = document.querySelector('#buttons');
