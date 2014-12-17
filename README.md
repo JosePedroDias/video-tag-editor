@@ -1,3 +1,5 @@
+### recipe for video scene detection w/ web interface for tweaking cuts
+
 used ffmpeg to find scene transitions with:
 
 	ffprobe -show_frames -of compact=p=0 -f lavfi "movie=bestOfWeb7.mp4,select=gt(scene\,.4)" > scenes.txt
