@@ -7,3 +7,5 @@ used ffmpeg to find scene transitions with:
 parsed result (`scenes.txt`) into `sceneTimesOriginal.json` via `parseSceneDetection.js`
 
 made a copy (`sceneTimes.json`) and edited result using `index.html` (which uses `displayScenes.js`, `timelineTweaker` and `chroma.min.js`)
+
+The example for tag editing is this awesome video [Best of Web 7 by Zapatou](https://www.youtube.com/watch?v=axgDgH6f7Pw)
