@@ -9,18 +9,58 @@
 			body {
 				font-family: sans-serif;
 			}
+
+			#label {
+				color: #444;
+				padding: 10px;
+			}
+
+			#label b {
+				display: inline-block;
+				width: 6em;
+				text-align: right;
+			}
+
+			button {
+				background-color: #FFF;
+				color:            #000;
+				border: 1px solid #AAA;
+			}
+
+			#buttons.no-op  .no-op,
+			#buttons.add    .add,
+			#buttons.move   .move,
+			#buttons.delete .delete {
+				background-color: #000;
+				color:            #FFF;
+			}
 		</style>
 	</head>
 
 	<body>
-		<video controls>
+		<video>
 			<source src="http://videos.sapo.pt/dYMbm0HbaGD1M72IEH1l/mov/1" type="video/mp4">
-			<!-- <source src="bestOfWeb7.mp4" type="video/mp4"> -->
 		</video>
 
 		<br/><br/>
 
-		<div id="index"></div>
+		<button onclick="v.currentTime = v.currentTime - 1">-1s</button>
+		<button onclick="v.currentTime = v.currentTime + 1">+1s</button>
+		<button onclick="v.play()">play</button>
+		<button onclick="v.pause()">pause</button>
+		<button onclick="window.export()">export</button>
+
+		<br/>
+
+		<div id="label">&nbsp;<br/>&nbsp;</div>
+
+		<div id="buttons" class="no-op">
+			<button class="no-op">no op</button>
+			<button class="add">add</button>
+			<button class="move">move</button>
+			<button class="delete">delete</button>
+		</div>
+		<br/>
 
 		<script type="text/javascript" src="chroma.min.js"></script>
 		<script type="text/javascript" src="timelineTweaker.js"></script>

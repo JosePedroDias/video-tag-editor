@@ -50,9 +50,22 @@ ajax({
 
 				//console.log('videos', videos);
 
-				var videoEl = document.querySelector('video');
-				var buttonEl = document.querySelector('button');
-				var indexDivEl = document.querySelector('div');
+				var videoEl    = document.querySelector('video');
+				var buttonsEl  = document.querySelector('#buttons');
+				var labelEl    = document.querySelector('#label');
+
+				window.v = videoEl;
+
+				buttonsEl.addEventListener('click', function(ev) {
+					var el = ev.target;
+					if (el.nodeName.toLowerCase() !== 'button') { return; }
+					tt.setMode(el.className);
+					buttonsEl.className = el.className;
+				});
+
+				window.export = function() {
+					console.log( JSON.stringify(sceneTimes) );
+				};
 
 				var whichIndex = function(t, arr) {
 					var item, i = 0;
@@ -74,29 +87,16 @@ ajax({
 				videoEl.addEventListener('timeupdate', function() {
 					var t = videoEl.currentTime;
 					var idx = whichIndex(t, sceneTimes);
-					var label = videos[idx];
+					var label = videos[idx] || '-- #';
+					var parts = label.split(' ');
 
 					t0 = sceneTimes[idx-1];
 					t1 = sceneTimes[idx  ];
 					t2 = sceneTimes[idx+1];
 					
-					indexDivEl.innerHTML = [
-						't: ', ft(t),
-						'<br/>',
-						
-						'i: ', (idx+1),
-						'<br/>',
-
-						'label:', label,
-						'<br/>',
-						
-						'neighbours are: [',
-							ft(t0),
-						',',
-							ft(t1),
-						',',
-							ft(t2),
-						']'
+					labelEl.innerHTML = [
+						'<b>label:</b>       <a href="', parts[1], '" target="_blank">', parts[0], '</a><br/>',
+						'<b>next cut at:</b> ', ft(t2), ' (', ft(t2-t), ' left)'
 					].join('');
 
 					tt.update(t, idx);

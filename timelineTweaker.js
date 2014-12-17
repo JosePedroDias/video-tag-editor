@@ -7,6 +7,8 @@ var timelineTweaker = function(o) {
 	var ctColor    = o.ctColor    || '#000';
 	var tagColor   = o.tagColor   || '#FFF';
 
+	var mode = 'no op'; // add delete move
+
 
 	var range = function(n) {
 		var fakeArr = new Array(paletteSteps+1).join(',').split('');
@@ -38,7 +40,11 @@ var timelineTweaker = function(o) {
 	var h  = dims[1];
 	var h2 = ~~(h/2);
 
+	var lastT;
+	var lastInWindow;
+
 	var windowSize2 = windowSize/2;
+	var timeDensity = windowSize / w;
 
 	var buildTag = function(idx, t) {
 		if (t === undefined) { t = arr[idx] || 0; }
@@ -48,6 +54,47 @@ var timelineTweaker = function(o) {
 			label: (idx+1)+''
 		};
 	};
+
+	var onClick = function(ev) {
+		var x = ev.clientX - ev.target.getBoundingClientRect().left;
+		var t = lastT - windowSize2 + x * timeDensity;
+		var closestIndex = -1;
+		var smallestDT = 10000;
+		var isBefore = false;
+		for (var i = 0, I = lastInWindow.length, dT; i < I; ++i) {
+			dT = Math.abs(lastInWindow[i].time - t);
+			if (dT < smallestDT) {
+				smallestDT = dT;
+				closestIndex = lastInWindow[i].index;
+			}
+		}
+		if (closestIndex === -1) { closestIndex = lastIndex; }
+		//console.log('mode', mode, 'x', x, 't', t, 'closestIndex', closestIndex, 'dT', dT);
+
+		if (mode === 'delete') {
+			arr.splice(closestIndex, 1);
+		}
+		else if (mode === 'add') {
+			var isBefore = t < arr[closestIndex];
+			console.log('isBefore', isBefore);
+			arr.splice(closestIndex + (isBefore ? 0 : 1), 0, t);
+			if (isBefore) {
+				++lastIndex;
+			}
+		}
+		else if (mode === 'move') {
+			arr[closestIndex] = t;
+		}
+		else {
+			return;
+		}
+
+		console.log(JSON.stringify(arr));
+
+		api.update(lastT, lastIndex);
+	};
+
+	canvasEl.addEventListener('click', onClick);
 
 	api.update = function(t, currentIdx) {
 		var t0 = t - windowSize2;
@@ -127,7 +174,18 @@ var timelineTweaker = function(o) {
 		ctx.fillRect(w2, 0, 1, h);
 
 		ctx.fillText(t.toFixed(2), w2, h2);
+
+		lastT = t;
+		lastInWindow = inWindow;
+		lastIndex = currentIdx;
 	};
+
+	api.setMode = function(mode_) {
+		//console.log('setMode', mode_);
+		mode = mode_;
+	};
+
+	api.update(0, -1);
 
 	return api;
 };
